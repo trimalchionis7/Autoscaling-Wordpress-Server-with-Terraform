@@ -8,7 +8,6 @@ resource "aws_instance" "instance" {
   key_name                    = "vockey"
   vpc_security_group_ids      = ["sg-06c6b023048ee9ad9"]
   subnet_id                   = "subnet-07b832ebd68ea0cda"
-  # iam_instance_profile        = "<lab role>"
   count = 1
   tags = {
     Name = "first-try"
