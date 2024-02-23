@@ -3,9 +3,10 @@ resource "aws_security_group" "sg_vpc" {
   name        = "sg_vpc"
   description = "allow shh"
   vpc_id      = aws_vpc.dev_vpc.id
+}
 
-  # Add inbound rules
-  # Add a rule for HTTP
+# Add inbound rules
+# Add a rule for HTTP
   ingress {
     description = "HTTP"
     from_port   = 80
@@ -14,7 +15,7 @@ resource "aws_security_group" "sg_vpc" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Add a rule for SSH
+# Add a rule for SSH
   ingress {
     description = "SSH"
     from_port   = 22
