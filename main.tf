@@ -1,41 +1,61 @@
 # Create a VPC to launch our instances into
 resource "aws_vpc" "dev_vpc" {
-  cidr_block = var.vpc_cidr_block  
-  enable_dns_hostnames = true 
-  enable_dns_support = true
-  
-  tags       =  {
-    name     = "first-vpc"
-  }       
-}
-
-# Create 2 public & 2 private subnets in 2 different AZ
-resource "aws_subnet" "public" {
-  count               = length(var.public_subnet_cidr_blocks)
-  vpc_id              = aws_vpc.dev_vpc.id
-  cidr_block          = var.public_subnet_cidr_blocks[count.index]
-  availability_zone   = element(["us-west-2a", "us-west-2b"], count.index)
-  map_public_ip_on_launch = true
+  cidr_block          = var.vpc_cidr_block
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = {
-    Name = "public-${count.index + 1}"
+    name = "first-vpc"
   }
 }
 
-resource "aws_subnet" "private" {
-  count               = length(var.private_subnet_cidr_blocks)
-  vpc_id              = aws_vpc.dev_vpc.id 
-  cidr_block          = var.private_subnet_cidr_blocks[count.index]
-  availability_zone   = element(["us-west-2a", "us-west-2b"], count.index)
+# Define two public subnets in different AZs
+resource "aws_subnet" "public-1" {
+  vpc_id              = aws_vpc.dev_vpc.id
+  cidr_block          = var.public_subnet_cidr_blocks[0]
+  availability_zone   = "us-west-2a"
+  map_public_ip_on_launch = true
 
   tags = {
-    Name = "private-${count.index + 1}" 
+    Name = "public-1"
+  }
+}
+
+resource "aws_subnet" "public-2" {
+  vpc_id              = aws_vpc.dev_vpc.id
+  cidr_block          = var.public_subnet_cidr_blocks[1]
+  availability_zone   = "us-west-2b"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "public-2"
+  }
+}
+
+# Define two private subnets in different AZs
+resource "aws_subnet" "private-1" {
+  vpc_id              = aws_vpc.dev_vpc.id
+  cidr_block          = var.private_subnet_cidr_blocks[0]
+  availability_zone   = "us-west-2a"
+
+  tags = {
+    Name = "private-1"
+  }
+}
+resource "aws_subnet" "private-2" {
+  vpc_id              = aws_vpc.dev_vpc.id
+  cidr_block          = var.private_subnet_cidr_blocks[1]
+  availability_zone   = "us-west-2b"
+
+  tags = {
+    Name = "private-2"
   }
 }
 
 # Create an Internet Gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.dev_vpc.id
+
   tags = {
     Name = "igw_first-vpc"
   }
@@ -49,20 +69,17 @@ resource "aws_route_table" "RB_Public_RouteTable" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
   }
+
   tags = {
     Name = "public-rt"
   }
 }
 
 resource "aws_route_table" "RB_Private_RouteTable" {
-vpc_id = aws_vpc.dev_vpc.id
-#
-# route { 
-#   cidr_block = "0.0.0.0/0"
-#   gateway_id = aws_internet_gateway.igw.id
-#  }
-tags = {
-  Name = "private-rt"
+  vpc_id = aws_vpc.dev_vpc.id
+
+  tags = {
+    Name = "private-rt"
   }
 }
 

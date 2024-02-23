@@ -1,10 +1,11 @@
 #! /bin/bash
-# # Install updates
-sudo yum update -y
+
 # Install Apache server
 sudo yum install -y httpd
 # Install MariaDB
-sudo yum install -y mariadb105-server unzip
+sudo yum install -y httpd mariadb-server php php-mysqlnd
+# Install updates
+sudo yum update -y
 
 # Set database variables
 
@@ -43,8 +44,8 @@ cp ./wp-config-sample.php ./wp-config.php # rename the file from sample to clean
 sed -i "s/'database_name_here'/'$DBName'/g" wp-config.php 
 sed -i "s/'username_here'/'$DBUser'/g" wp-config.php 
 sed -i "s/'password_here'/'$DBPassword'/g" wp-config.php
-# Grant permissions
 
+# Grant permissions
 usermod -a -G apache ec2-user 
 chown -R ec2-user:apache /var/www 
 chmod 2775 /var/www 
