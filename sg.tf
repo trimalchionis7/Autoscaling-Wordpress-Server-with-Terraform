@@ -1,12 +1,11 @@
 # Create a Security Group for the VPC
 resource "aws_security_group" "sg_vpc" {
   name        = "sg_vpc"
-  description = "allow shh"
+  description = "allow shh and http"
   vpc_id      = aws_vpc.dev_vpc.id
-}
 
-# Add inbound rules
-# Add a rule for HTTP
+  # Add inbound rules
+  # Add a rule for HTTP
   ingress {
     description = "HTTP"
     from_port   = 80
@@ -15,7 +14,18 @@ resource "aws_security_group" "sg_vpc" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-# Add a rule for SSH
+  # Add an outbound rule
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "sg-vpc"
+  }
+
+  # Add a rule for SSH
   ingress {
     description = "SSH"
     from_port   = 22
@@ -23,16 +33,10 @@ resource "aws_security_group" "sg_vpc" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-resource "aws_security_group" "allow_ssh" {
-  name        = "allow_ssh"
-  description = "Allow SSH traffic"
-  vpc_id      = aws_vpc.dev_vpc.id
-
-  ingress {
-    description      = "allow SSH"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
+}
