@@ -28,8 +28,9 @@ resource "aws_instance" "instance" {
   vpc_security_group_ids      = [aws_security_group.sg_vpc.id]
   subnet_id                   = aws_subnet.public-1.id
   # iam_instance_profile      = "LabRole"
-  user_data = file("userdata.tpl")
   count = 1
+  
+  user_data = file("user-data.sh")
   tags = {
     Name = "jonnie-vpc"
   }
