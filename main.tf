@@ -5,7 +5,7 @@ resource "aws_vpc" "dev_vpc" {
   enable_dns_support   = true
 
   tags = {
-    name = "first-vpc"
+    name = "jonnie-vpc"
   }
 }
 
@@ -57,7 +57,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.dev_vpc.id
 
   tags = {
-    Name = "igw_first-vpc"
+    Name = "igw_jonnie-vpc"
   }
 }
 

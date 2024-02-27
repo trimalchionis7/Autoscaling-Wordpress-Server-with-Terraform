@@ -1,6 +1,6 @@
 # Create a Security Group for the VPC
 resource "aws_security_group" "sg_vpc" {
-  name        = "sg_first-vpc"
+  name        = "sg_jonnie-vpc"
   description = "allow shh and http"
   vpc_id      = aws_vpc.dev_vpc.id
 
@@ -22,7 +22,7 @@ resource "aws_security_group" "sg_vpc" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "sg_first-vpc"
+    Name = "sg_jonnie-vpc"
   }
 
   # Add a rule for SSH
