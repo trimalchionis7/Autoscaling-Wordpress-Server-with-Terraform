@@ -1,5 +1,5 @@
-# Further steps
+# Further steps to complete
 
-Add IAM role
+- Add IAM role
 
-Enable for HTTPS
+- Enable HTTPS
