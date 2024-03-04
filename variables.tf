@@ -17,7 +17,7 @@ variable "region" {
     description = "AWS Region"
 }
 
-variable "latest_amazon_linux_ami" {
+ /* variable "latest_amazon_linux_ami" {
   description = "Latest Amazon Linux AMI for the specified region"
   type        = string
   default     = "ami-0895022f3dac85884"
@@ -29,4 +29,4 @@ variable "AMIs" {
     default = {
     us-west-2 = "ami-0895022f3dac85884"
     }
-}
+}  */

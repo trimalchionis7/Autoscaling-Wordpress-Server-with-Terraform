@@ -19,8 +19,8 @@ data "aws_ami" "latest_linux_ami" {
 }
 
 resource "aws_instance" "instance" {
-  #ami                        = data.aws_ami.latest_linux_ami.id
-  ami                         = var.AMIs[var.region]
+  ami                         = data.aws_ami.latest_linux_ami.id
+  # ami                       = var.AMIs[var.region]
   instance_type               = "t3.micro"
   availability_zone           = "us-west-2a"
   associate_public_ip_address = true
@@ -30,7 +30,7 @@ resource "aws_instance" "instance" {
   # iam_instance_profile      = "LabRole"
   count = 1
   
-  user_data = file("user-data.sh")
+  user_data = file("wordpress-setup.sh")
   tags = {
     Name = "jonnie-vpc"
   }
