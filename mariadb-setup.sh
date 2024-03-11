@@ -50,9 +50,11 @@ DBRootPassword='rootpassword'
 # Start the Apache server and enable it to start automatically on system boot
 sudo systemctl start httpd
 sudo systemctl enable httpd
+
 # Start the MariaDB service and enable it to start automatically on system boot
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
+
 # Secure the MariaDB server by setting the root password
 mysqladmin -u root password $DBRootPassword
 
