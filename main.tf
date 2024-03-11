@@ -107,3 +107,28 @@ resource "aws_route_table_association" "Private_Subnet2_Asso" {
   subnet_id      = aws_subnet.private-2.id
   depends_on     = [aws_route_table.RB_Private_RouteTable, aws_subnet.private-2]
 }
+
+# Create security group for RDS database enabling inbound traffic on port 3306 for any EC2 instance
+resource "aws_security_group" "allow_ec2_mysql" {
+  name        = "allow_ec2_mysql"
+  description = "Allow mysql inbound traffic from ec2"
+
+  vpc_id = aws_vpc.dev_vpc.id
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "rds-sg"
+  }
+}
