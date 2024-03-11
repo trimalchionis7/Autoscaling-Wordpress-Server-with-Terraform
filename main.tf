@@ -108,7 +108,7 @@ resource "aws_route_table_association" "Private_Subnet2_Asso" {
   depends_on     = [aws_route_table.RB_Private_RouteTable, aws_subnet.private-2]
 }
 
-# Create security group for RDS database enabling inbound traffic on port 3306 for any EC2 instance
+# Create security group for RDS database
 resource "aws_security_group" "allow_ec2_mysql" {
   name        = "allow_ec2_mysql"
   description = "Allow mysql inbound traffic from ec2"
@@ -131,4 +131,9 @@ resource "aws_security_group" "allow_ec2_mysql" {
   tags = {
     Name = "rds-sg"
   }
+}
+
+# Output block for RDS endpoint
+output "rds_endpoint" {
+    value = aws_db_instance.jonnierds.endpoint
 }
