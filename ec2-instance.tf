@@ -30,7 +30,7 @@ resource "aws_instance" "instance" {
   # iam_instance_profile      = "LabRole"
   count = 1
   
-  user_data = file("wordpress-setup.sh")
+  user_data = file("rds-setup.sh")
   tags = {
     Name = "jonnie-vpc"
   }
