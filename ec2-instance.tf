@@ -28,10 +28,10 @@ resource "aws_instance" "instance" {
   vpc_security_group_ids      = [aws_security_group.sg_vpc.id]
   subnet_id                   = aws_subnet.public-1.id
   # iam_instance_profile      = "LabRole"
-  count = 1
+  # count                       = 1
   
-  user_data = file("rds-setup.sh")
+  user_data = file("mariadb-setup.sh")
   tags = {
-    Name = "jonnie-vpc"
+    Name = "jonnie-ec2-instance"
   }
 }

@@ -61,6 +61,26 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
+# Create NAT gateway in public subnet 1
+resource "aws_nat_gateway" "nat-gw" {
+  count         = 1
+  allocation_id = element(aws_eip.nat-eip.*.id, count.index)
+  subnet_id     = aws_subnet.public-1.id
+
+  tags = {
+    Name = "nat-gw"
+  }
+}
+
+# Create Elastic IP for NAT gateway
+resource "aws_eip" "nat-eip" {
+  instance = aws_instance.instance.id
+
+  tags = {
+    Name = "nat-eip"
+  }
+}
+
 # Create public & private route tables
 resource "aws_route_table" "RB_Public_RouteTable" {
   vpc_id = aws_vpc.dev_vpc.id
@@ -77,6 +97,11 @@ resource "aws_route_table" "RB_Public_RouteTable" {
 
 resource "aws_route_table" "RB_Private_RouteTable" {
   vpc_id = aws_vpc.dev_vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.nat-gw[0].id
+  }
 
   tags = {
     Name = "private-rt"
@@ -131,9 +156,4 @@ resource "aws_security_group" "allow_ec2_mysql" {
   tags = {
     Name = "rds-sg"
   }
-}
-
-# Output block for RDS endpoint
-output "rds_endpoint" {
-    value = aws_db_instance.jonnierds.endpoint
 }
