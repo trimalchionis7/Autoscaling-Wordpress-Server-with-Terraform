@@ -1,44 +1,10 @@
-#! /bin/bash
-# ---------------------------------------------------------
-# WordPress Setup Script
-# ---------------------------------------------------------
-# Purpose:
-# This script automates the setup of a WordPress environment on a Linux server.
-# It is designed to be run on a fresh instance to install and configure the necessary
-# components for a WordPress site, including the Apache web server, MariaDB database,
-# PHP, and WordPress itself.
-#
-# Usage:
-# This script is intended for system administrators or developers setting up WordPress
-# on a cloud instance or dedicated server. It simplifies the initial setup process, ensuring
-# a standard, secure, and optimized environment for running WordPress.
-#
-# Components Installed:
-# - Apache web server for serving WordPress pages
-# - MariaDB, a community-developed fork of MySQL, for database storage
-# - PHP and PHP MySQL extension to execute WordPress PHP scripts and interact with the database
-# - WordPress, the latest version, as the content management system
-#
-# Additional Configurations:
-# - Sets the MariaDB root password for security
-# - Configures the WordPress wp-config.php with the provided database details
-# - Adjusts file and directory permissions for security and accessibility
-#
-# Prerequisites:
-# - A Linux server with yum package manager (CentOS, Amazon Linux, etc.)
-# - Network access to yum repositories to install packages
-# - Sudo privileges for the executing user to install software and change configurations
-#
-# Note:
-# Before running, ensure you replace the placeholder values for DBName, DBUser,
-# DBPassword, and DBRootPassword with your actual database configuration.
-# ---------------------------------------------------------
+# Wordpress installation and connection to AWS RDS database
 
 # Update all packages on the system to their latest versions
 sudo yum update -y
 # Install Apache web server
 sudo yum install -y httpd
-# Install PHP, and PHP's MySQL extension, along with unzip utility
+# Install PHP and PHP's MySQL extension, along with unzip utility
 sudo yum install -y php php-mysqlnd unzip
 
 # Set variables for the database configuration
@@ -51,21 +17,6 @@ DBHostname='jonnie-rds.c9eymqyc04g3.us-west-2.rds.amazonaws.com'
 # Start the Apache server and enable it to start automatically on system boot
 sudo systemctl start httpd
 sudo systemctl enable httpd
-
-# Start the MariaDB service and enable it to start automatically on system boot
-# sudo systemctl start mariadb
-# sudo systemctl enable mariadb
-
-# Secure MySQL installation (set root password, remove anonymous users, disallow remote root login, remove test database)
-sudo yum install -y https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
-sudo yum install -y mysql-community-client
-
-# Run the following line if you get a GPG error and then run the previous line again
-rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
-mysql -u $DBUser -p$DBPassword -h $DBHostname -P 3306
-
-# Secure MySQL server by setting the root password
-mysqladmin -u root password $DBRootPassword
 
 # Download the latest version of WordPress and place it in the web root directory
 wget http://wordpress.org/latest.tar.gz -P /var/www/html
@@ -90,12 +41,11 @@ find /var/www -type d -exec chmod 2775 {} \; # Find directories and set permissi
 find /var/www -type f -exec chmod 0664 {} \; # Find files and set permissions
 
 # Set up the WordPress database and user
-echo "CREATE DATABASE $DBName;" >> /tmp/db.setup
-echo "CREATE USER '$DBUser'@'%' IDENTIFIED BY '$DBPassword';" >> /tmp/db.setup
-echo "GRANT ALL ON $DBName.* TO '$DBUser'@'%';" >> /tmp/db.setup
-echo "FLUSH PRIVILEGES;" >> /tmp/db.setup
+# echo "CREATE DATABASE $DBName;" >> /tmp/db.setup
+# echo "CREATE USER '$DBUser'@'%' IDENTIFIED BY '$DBPassword';" >> /tmp/db.setup
+# echo "GRANT ALL ON $DBName.* TO '$DBUser'@'%';" >> /tmp/db.setup
+# echo "FLUSH PRIVILEGES;" >> /tmp/db.setup
 
 # Apply the database setup
-mysql -h $DBHostname --password=$DBPassword < /tmp/db.setup
-# Clean up the temporary setup file
-sudo rm /tmp/db.setup 
+sudo mysqladmin -u root password $DBRootPassword
+sudo mysql -h $DBHostname -u $DBUser -p $DBPassword -e "SHOW DATABASES";
