@@ -14,17 +14,6 @@ resource "aws_security_group" "sg_vpc" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Add an outbound rule
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = {
-    Name = "sg_jonnie-vpc"
-  }
-
   # Add a rule for SSH
   ingress {
     description = "SSH"
@@ -33,10 +22,22 @@ resource "aws_security_group" "sg_vpc" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  # Add an outbound rule
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "sg_jonnie-vpc"
   }
 }
