@@ -1,4 +1,4 @@
-# variables.tf
+# Variables
 variable "vpc_cidr_block" {
   description = "CIDR block for the VPC"
   default     = "10.0.0.0/16"
@@ -17,7 +17,7 @@ variable "region" {
     description = "AWS Region"
 }
 
- /* variable "latest_amazon_linux_ami" {
+/*variable "latest_amazon_linux_ami" {
   description = "Latest Amazon Linux AMI for the specified region"
   type        = string
   default     = "ami-0895022f3dac85884"
@@ -29,4 +29,4 @@ variable "AMIs" {
     default = {
     us-west-2 = "ami-0895022f3dac85884"
     }
-}  */
+}*/

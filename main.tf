@@ -74,7 +74,7 @@ resource "aws_nat_gateway" "nat-gw" {
 
 # Create Elastic IP for NAT gateway
 resource "aws_eip" "nat-eip" {
-  instance = aws_instance.instance.id
+  vpc = true
 
   tags = {
     Name = "nat-eip"

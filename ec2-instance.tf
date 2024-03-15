@@ -1,4 +1,4 @@
-# Code for launching EC2 instance in Terraform
+# Create specified numbe of EC2 instances
 
 locals {
   # The name of the EC2 instance
@@ -7,7 +7,6 @@ locals {
 }
 
 # Select the newest AMI
-
 data "aws_ami" "latest_linux_ami" {
   most_recent = true
   owners      = ["amazon"]
@@ -28,7 +27,7 @@ resource "aws_instance" "instance" {
   vpc_security_group_ids      = [aws_security_group.sg_vpc.id]
   subnet_id                   = aws_subnet.public-1.id
   # iam_instance_profile      = "LabRole"
-  # count                       = 1
+  count                       = 2
   
   user_data = file("mariadb-setup.sh")
   tags = {

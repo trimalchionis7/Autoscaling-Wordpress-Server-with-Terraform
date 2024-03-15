@@ -18,6 +18,9 @@ DBHostname='jonnie-rds.c9eymqyc04g3.us-west-2.rds.amazonaws.com'
 sudo systemctl start httpd
 sudo systemctl enable httpd
 
+# Secure the MariaDB server by setting the root password
+mysqladmin -u root password $DBRootPassword
+
 # Download the latest version of WordPress and place it in the web root directory
 wget http://wordpress.org/latest.tar.gz -P /var/www/html
 cd /var/www/html
@@ -28,10 +31,10 @@ rm latest.tar.gz # Clean up by deleting the downloaded archive
 
 # Rename the sample WordPress configuration file and update it with the database details
 cp ./wp-config-sample.php ./wp-config.php
-sed -i "s/'database_name_here'/$DBName/g" wp-config.php
-sed -i "s/'username_here'/$DBUser/g" wp-config.php
-sed -i "s/'password_here'/$DBPassword/g" wp-config.php
-sed -i "s/'localhost'/$DBHostname/g" wp-config.php
+sed -i "s/'database_name_here'/'$DBName'/g" wp-config.php
+sed -i "s/'username_here'/'$DBUser'/g" wp-config.php
+sed -i "s/'password_here'/'$DBPassword'/g" wp-config.php
+sed -i "s/'localhost'/'$DBHostname'/g" wp-config.php
 
 # Change the ownership and permissions to secure the WordPress files and directories
 usermod -a -G apache ec2-user # Add the ec2-user to the apache group
@@ -41,10 +44,10 @@ find /var/www -type d -exec chmod 2775 {} \; # Find directories and set permissi
 find /var/www -type f -exec chmod 0664 {} \; # Find files and set permissions
 
 # Set up the WordPress database and user
-# echo "CREATE DATABASE $DBName;" >> /tmp/db.setup
-# echo "CREATE USER '$DBUser'@'%' IDENTIFIED BY '$DBPassword';" >> /tmp/db.setup
-# echo "GRANT ALL ON $DBName.* TO '$DBUser'@'%';" >> /tmp/db.setup
-# echo "FLUSH PRIVILEGES;" >> /tmp/db.setup
+echo "CREATE DATABASE $DBName;" >> /tmp/db.setup
+echo "CREATE USER '$DBUser'@'localhost' IDENTIFIED BY '$DBPassword';" >> /tmp/db.setup
+echo "GRANT ALL ON $DBName.* TO '$DBUser'@'localhost';" >> /tmp/db.setup
+echo "FLUSH PRIVILEGES;" >> /tmp/db.setup
 
 # Apply the database setup
 sudo mysqladmin -u root password $DBRootPassword
