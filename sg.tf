@@ -1,11 +1,11 @@
-# Create a Security Group for the VPC
-resource "aws_security_group" "sg_vpc" {
-  name        = "sg_jonnie-vpc"
-  description = "allow shh and http"
+# Create security group which traffics internet to the ALB
+resource "aws_security_group" "alb-sg" {
+  name        = "load_balancer_security_group"
+  description = "Controls internet access to the ALB"
   vpc_id      = aws_vpc.dev_vpc.id
 
   # Add inbound rules
-  # Add a rule for HTTP
+  # Allow HTTP
   ingress {
     description = "HTTP"
     from_port   = 80
@@ -14,7 +14,7 @@ resource "aws_security_group" "sg_vpc" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Add a rule for SSH
+  # Allow SSH
   ingress {
     description = "SSH"
     from_port   = 22
@@ -30,6 +30,37 @@ resource "aws_security_group" "sg_vpc" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "alb-sg"
+  }
+}
+
+# Create security group which traffics internet from ALB to EC2 instances
+resource "aws_security_group" "ec2-sg" {
+  name        = "ec2_security_group"
+  description = "Allows internet access from ALB to EC2 instances"
+  vpc_id      = aws_vpc.dev_vpc.id
+
+  # Add inbound rules
+  # Allow HTTP
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    security_groups = [aws_security_group.alb-sg.id]
+  }
+
+  # Allow SSH
+  ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Add an outbound rule
   egress {
     from_port   = 0
     to_port     = 0
@@ -38,6 +69,6 @@ resource "aws_security_group" "sg_vpc" {
   }
 
   tags = {
-    Name = "sg_jonnie-vpc"
+    Name = "ec2-sg"
   }
 }

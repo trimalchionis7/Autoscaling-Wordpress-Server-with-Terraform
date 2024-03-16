@@ -2,12 +2,12 @@
 
 # Create an ALB
 resource "aws_lb" "alb" {
-    name = "jonnie-alb"
-    internal = false
-    load_balancer_type = "application"
-    subnets = [aws_subnet.public-1.id, aws_subnet.public-2.id]
-    security_groups = [aws_security_group.sg_vpc.id]
-    ip_address_type = "ipv4"
+    name                = "jonnie-alb"
+    internal            = false
+    load_balancer_type  = "application"
+    subnets             = [aws_subnet.public-1.id, aws_subnet.public-2.id]
+    security_groups     = [aws_security_group.ec2-sg.id]
+    ip_address_type     = "ipv4"
 
     tags = {
         Name = "jonnie-alb"
