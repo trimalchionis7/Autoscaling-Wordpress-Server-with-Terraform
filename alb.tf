@@ -40,9 +40,9 @@ resource "aws_lb_target_group" "target-group" {
 
 # Attach target group to instances
 resource "aws_alb_target_group_attachment" "ec2_attach" {
-    count = length(aws_instance.instance)
+    count = length(aws_instance.instance-1) + length(aws_instance.instance-2)
     target_group_arn = aws_lb_target_group.target-group.arn
-    target_id = aws_instance.instance[count.index].id
+    target_id = count.index < length(aws_instance.instance-1) ? aws_instance.instance-1[count.index].id : aws_instance.instance-2[count.index - length(aws_instance.instance-1)].id 
 }
 
 # Check for HTTP connection requests using listener
