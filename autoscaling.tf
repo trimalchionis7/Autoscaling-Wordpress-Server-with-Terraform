@@ -14,7 +14,7 @@ resource "aws_launch_template" "public_launch_template" {
 # Create autoscaling group
 resource "aws_autoscaling_group" "public_asg" {
     name = "public_asg"
-    min_size = 1
+    min_size = 2
     max_size = 4
     desired_capacity = 2
     vpc_zone_identifier = [aws_subnet.public-1.id, aws_subnet.public-2.id]

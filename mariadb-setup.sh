@@ -42,10 +42,18 @@ sudo yum install -y httpd
 sudo yum install -y mariadb105-server php php-mysqlnd unzip
 
 # Set variables for the database configuration
-DBName='aurora_db'
-DBUser='username'
-DBPassword='password'
-DBRootPassword='rootpassword'
+DBName="$(terraform output -raw rds_name)"
+DBUser="$(terraform output -raw rds_username)"
+DBPassword="$(terraform output -raw rds_password)"
+DBRootPassword="$(terraform output -raw rds_rootpassword)"
+DBHost="$(terraform output -raw rds_endpoint)"
+
+# Debugging: Print variable values
+echo "DBName: $DBName"
+echo "DBUser: $DBUser"
+echo "DBPassword: $DBPassword"
+echo "DBRootPassword: $DBRootPassword"
+echo "DBHost: $DBHost"
 
 # Start the Apache server and enable it to start automatically on system boot
 sudo systemctl start httpd
@@ -71,6 +79,7 @@ cp ./wp-config-sample.php ./wp-config.php
 sed -i "s/'database_name_here'/'$DBName'/g" wp-config.php
 sed -i "s/'username_here'/'$DBUser'/g" wp-config.php
 sed -i "s/'password_here'/'$DBPassword'/g" wp-config.php
+sed -i "s/'localhost'/'$DBHost'/g" wp-config.php
 
 # Change the ownership and permissions to secure the WordPress files and directories
 usermod -a -G apache ec2-user # Add the ec2-user to the apache group
@@ -80,9 +89,12 @@ find /var/www -type d -exec chmod 2775 {} \; # Find directories and set permissi
 find /var/www -type f -exec chmod 0664 {} \; # Find files and set permissions
 
 # Set up the WordPress database and user
-echo "CREATE DATABASE $DBName;" >> /tmp/db.setup
+echo "CREATE DATABASE '$DBName';" >> /tmp/db.setup
 echo "CREATE USER '$DBUser'@'localhost' IDENTIFIED BY '$DBPassword';" >> /tmp/db.setup
-echo "GRANT ALL ON $DBName.* TO '$DBUser'@'localhost';" >> /tmp/db.setup
+echo "GRANT ALL ON '$DBName'.* TO '$DBUser'@'$DBHost';" >> /tmp/db.setup
 echo "FLUSH PRIVILEGES;" >> /tmp/db.setup
 mysql -u root --password=$DBRootPassword < /tmp/db.setup # Apply the database setup
 sudo rm /tmp/db.setup # Clean up the temporary setup file
+
+# Copy the WordPress configuration file to S3 bucket
+# aws s3 cp /var/www/html/wp-config.php s3://${var.aws_s3_bucket}

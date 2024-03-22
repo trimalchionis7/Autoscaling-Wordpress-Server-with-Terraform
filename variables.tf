@@ -31,6 +31,31 @@ variable "private_subnet_cidr_blocks" {
   default     = ["10.0.2.0/24", "10.0.4.0/24"]
 }
 
+variable "rds_name" {
+  description = "RDS DB name"
+  default     = "jonnierds"
+}
+
+variable "rds_username" {
+  description = "RDS DB username"
+  default     = "rds_username"
+}
+
+variable "rds_password" {
+  description = "RDS DB password"
+  default = "rds_password"
+}
+
+variable "rds_rootpassword" {
+  description = "RDS DB root password"
+  default = "rds_rootpassword"
+}
+
+variable "aws_s3_bucket" {
+  description = "S3 bucket name"
+  default = "jonnie-s3"
+}
+
 /*variable "latest_amazon_linux_ami" {
   description = "Latest Amazon Linux AMI for the specified region"
   type        = string
