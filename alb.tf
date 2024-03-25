@@ -2,57 +2,57 @@
 
 # Create an ALB
 resource "aws_lb" "alb" {
-    name                = "jonnie-alb"
-    internal            = false
-    load_balancer_type  = "application"
-    subnets             = [aws_subnet.public-1.id, aws_subnet.public-2.id]
-    security_groups     = [aws_security_group.ec2-sg.id]
-    ip_address_type     = "ipv4"
+  name               = "jonnie-alb"
+  internal           = false
+  load_balancer_type = "application"
+  subnets            = [aws_subnet.public-1.id, aws_subnet.public-2.id]
+  security_groups    = [aws_security_group.ec2-sg.id]
+  ip_address_type    = "ipv4"
 
-    tags = {
-        Name = "jonnie-alb"
-    }
+  tags = {
+    Name = "jonnie-alb"
+  }
 }
 
 # Add target group registering instance as target & configure health checks
 resource "aws_lb_target_group" "target-group" {
-    name = "alb-target-group"
-    port = 80
-    protocol = "HTTP"
-    target_type = "instance"
-    vpc_id = aws_vpc.dev_vpc.id
+  name        = "alb-target-group"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id      = aws_vpc.dev_vpc.id
 
-    tags = {
-        Name = "alb-target-group"
-    }
+  tags = {
+    Name = "alb-target-group"
+  }
 
-    health_check {
-        healthy_threshold = 3
-        unhealthy_threshold = 3
-        timeout = 5
-        interval = 30
-        path = "/"
-        port = "traffic-port"
-        protocol = "HTTP"
-        matcher = "200-399" 
-    }
+  health_check {
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    timeout             = 5
+    interval            = 30
+    path                = "/"
+    port                = "traffic-port"
+    protocol            = "HTTP"
+    matcher             = "200-399"
+  }
 }
 
 # Attach target group to instances
 resource "aws_alb_target_group_attachment" "ec2_attach" {
-    count = length(aws_instance.instance-1) + length(aws_instance.instance-2)
-    target_group_arn = aws_lb_target_group.target-group.arn
-    target_id = count.index < length(aws_instance.instance-1) ? aws_instance.instance-1[count.index].id : aws_instance.instance-2[count.index - length(aws_instance.instance-1)].id 
+  count            = length(aws_instance.instance-1) + length(aws_instance.instance-2)
+  target_group_arn = aws_lb_target_group.target-group.arn
+  target_id        = count.index < length(aws_instance.instance-1) ? aws_instance.instance-1[count.index].id : aws_instance.instance-2[count.index - length(aws_instance.instance-1)].id
 }
 
 # Check for HTTP connection requests using listener
 resource "aws_lb_listener" "alb-listener" {
-    load_balancer_arn = aws_lb.alb.arn
-    port = "80"
-    protocol = "HTTP"
+  load_balancer_arn = aws_lb.alb.arn
+  port              = "80"
+  protocol          = "HTTP"
 
-    default_action {
-        type = "forward"
-        target_group_arn = aws_lb_target_group.target-group.arn
-    }
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target-group.arn
+  }
 }

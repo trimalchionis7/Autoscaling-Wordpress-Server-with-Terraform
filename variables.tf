@@ -1,14 +1,14 @@
 # Variables
 
 variable "region" {
-    default = "us-west-2"
-    description = "AWS Region"
+  default     = "us-west-2"
+  description = "AWS Region"
 }
 
 variable "az" {
   description = "Availability zone to create subnet"
   type        = list(string)
-  default     = ["us-west-2a", "us-west-2b"] 
+  default     = ["us-west-2a", "us-west-2b"]
 }
 
 variable "subnet_ids" {
@@ -43,17 +43,17 @@ variable "rds_username" {
 
 variable "rds_password" {
   description = "RDS DB password"
-  default = "rds_password"
+  default     = "rds_password"
 }
 
 variable "rds_rootpassword" {
   description = "RDS DB root password"
-  default = "rds_rootpassword"
+  default     = "rds_rootpassword"
 }
 
 variable "aws_s3_bucket" {
   description = "S3 bucket name"
-  default = "jonnie-s3"
+  default     = "jonnie-s3"
 }
 
 /*variable "latest_amazon_linux_ami" {

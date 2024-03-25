@@ -51,7 +51,7 @@ resource "aws_security_group" "ec2-sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   # Allow SSH
   ingress {
     description = "SSH"

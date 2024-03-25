@@ -42,18 +42,18 @@ sudo yum install -y httpd
 sudo yum install -y mariadb105-server php php-mysqlnd unzip
 
 # Set variables for the database configuration
-DBName="$(terraform output -raw rds_name)"
-DBUser="$(terraform output -raw rds_username)"
-DBPassword="$(terraform output -raw rds_password)"
-DBRootPassword="$(terraform output -raw rds_rootpassword)"
-DBHost="$(terraform output -raw rds_endpoint)"
+DBName=${rds_name}
+DBUser=${rds_username}
+DBPassword=${rds_password}
+DBRootPassword=${rds_rootpassword}
+DBHost=${rds_endpoint}
 
 # Debugging: Print variable values
-echo "DBName: $DBName"
-echo "DBUser: $DBUser"
-echo "DBPassword: $DBPassword"
-echo "DBRootPassword: $DBRootPassword"
-echo "DBHost: $DBHost"
+sudo echo "DBName: $DBName"
+sudo echo "DBUser: $DBUser"
+sudo echo "DBPassword: $DBPassword"
+sudo echo "DBRootPassword: $DBRootPassword"
+sudo echo "DBHost: $DBHost"
 
 # Start the Apache server and enable it to start automatically on system boot
 sudo systemctl start httpd
@@ -76,10 +76,10 @@ rm latest.tar.gz # Clean up by deleting the downloaded archive
 
 # Rename the sample WordPress configuration file and update it with the database details
 cp ./wp-config-sample.php ./wp-config.php
-sed -i "s/'database_name_here'/'$DBName'/g" wp-config.php
-sed -i "s/'username_here'/'$DBUser'/g" wp-config.php
-sed -i "s/'password_here'/'$DBPassword'/g" wp-config.php
-sed -i "s/'localhost'/'$DBHost'/g" wp-config.php
+sed -i "s/'database_name_here'/$DBName/g" wp-config.php
+sed -i "s/'username_here'/$DBUser/g" wp-config.php
+sed -i "s/'password_here'/$DBPassword/g" wp-config.php
+sed -i "s/'localhost'/$DBHost/g" wp-config.php
 
 # Change the ownership and permissions to secure the WordPress files and directories
 usermod -a -G apache ec2-user # Add the ec2-user to the apache group
@@ -96,5 +96,16 @@ echo "FLUSH PRIVILEGES;" >> /tmp/db.setup
 mysql -u root --password=$DBRootPassword < /tmp/db.setup # Apply the database setup
 sudo rm /tmp/db.setup # Clean up the temporary setup file
 
-# Copy the WordPress configuration file to S3 bucket
-# aws s3 cp /var/www/html/wp-config.php s3://${var.aws_s3_bucket}
+"""
+# Install AWS Configure
+sudo yum install -y aws-cli
+# Configure AWS CLI
+aws configure set aws_access_key_id <YOUR_AwsAccessKey_HERE>
+aws configure set aws_secret_access_key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+aws configure set default.region us-west-2
+aws configure set output json
+
+# Export the WordPress configuration file to S3 bucket
+cd /var/www/html
+aws s3 sync s3://jonnie-s3/ .
+"""

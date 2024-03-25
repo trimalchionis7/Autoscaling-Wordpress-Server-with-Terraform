@@ -1,11 +1,11 @@
 # Create S3 bucket
-resource "aws_s3_bucket" "jonnie-s3-bucket" {
-    bucket = var.aws_s3_bucket
+resource "aws_s3_bucket" "s3-default-project" {
+  bucket = var.aws_s3_bucket
 
-    tags = {
-        Name = "s3-tf"
-        Environment = "Dev"
-    }
+  tags = {
+    Name        = "s3-default-project"
+    Environment = "Dev"
+  }
 }
 
 /*
