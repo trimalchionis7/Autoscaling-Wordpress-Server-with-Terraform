@@ -48,13 +48,6 @@ DBPassword=${rds_password}
 DBRootPassword=${rds_rootpassword}
 DBHost=${rds_endpoint}
 
-# Debugging: Print variable values
-sudo echo "DBName: $DBName"
-sudo echo "DBUser: $DBUser"
-sudo echo "DBPassword: $DBPassword"
-sudo echo "DBRootPassword: $DBRootPassword"
-sudo echo "DBHost: $DBHost"
-
 # Start the Apache server and enable it to start automatically on system boot
 sudo systemctl start httpd
 sudo systemctl enable httpd
@@ -76,10 +69,10 @@ rm latest.tar.gz # Clean up by deleting the downloaded archive
 
 # Rename the sample WordPress configuration file and update it with the database details
 cp ./wp-config-sample.php ./wp-config.php
-sed -i "s/'database_name_here'/$DBName/g" wp-config.php
-sed -i "s/'username_here'/$DBUser/g" wp-config.php
-sed -i "s/'password_here'/$DBPassword/g" wp-config.php
-sed -i "s/'localhost'/$DBHost/g" wp-config.php
+sed -i "s/'database_name_here'/'$DBName'/g" wp-config.php
+sed -i "s/'username_here'/'$DBUser'/g" wp-config.php
+sed -i "s/'password_here'/'$DBPassword'/g" wp-config.php
+sed -i "s/'localhost'/'$DBHost'/g" wp-config.php
 
 # Change the ownership and permissions to secure the WordPress files and directories
 usermod -a -G apache ec2-user # Add the ec2-user to the apache group
@@ -88,24 +81,25 @@ chmod 2775 /var/www # Set the directory permissions
 find /var/www -type d -exec chmod 2775 {} \; # Find directories and set permissions
 find /var/www -type f -exec chmod 0664 {} \; # Find files and set permissions
 
-# Set up the WordPress database and user
-echo "CREATE DATABASE '$DBName';" >> /tmp/db.setup
-echo "CREATE USER '$DBUser'@'localhost' IDENTIFIED BY '$DBPassword';" >> /tmp/db.setup
-echo "GRANT ALL ON '$DBName'.* TO '$DBUser'@'$DBHost';" >> /tmp/db.setup
-echo "FLUSH PRIVILEGES;" >> /tmp/db.setup
-mysql -u root --password=$DBRootPassword < /tmp/db.setup # Apply the database setup
-sudo rm /tmp/db.setup # Clean up the temporary setup file
+# # # Set up the WordPress database and user
+# echo "CREATE DATABASE '$DBName';" >> /tmp/db.setup
+# echo "CREATE USER '$DBUser'@'localhost' IDENTIFIED BY '$DBPassword';" >> /tmp/db.setup
+# echo "GRANT ALL ON '$DBName'.* TO '$DBUser'@'$DBHost';" >> /tmp/db.setup
+# echo "FLUSH PRIVILEGES;" >> /tmp/db.setup
+# mysql -u root --password=$DBRootPassword < /tmp/db.setup # Apply the database setup
+# # sudo rm /tmp/db.setup # Clean up the temporary setup file
 
-"""
-# Install AWS Configure
-sudo yum install -y aws-cli
-# Configure AWS CLI
-aws configure set aws_access_key_id <YOUR_AwsAccessKey_HERE>
-aws configure set aws_secret_access_key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-aws configure set default.region us-west-2
-aws configure set output json
+# Restart Apache to apply changes
+sudo systemctl restart httpd
 
-# Export the WordPress configuration file to S3 bucket
-cd /var/www/html
-aws s3 sync s3://jonnie-s3/ .
-"""
+# # Install AWS Configure
+# sudo yum install -y aws-cli
+# # Configure AWS CLI
+# aws configure set aws_access_key_id <YOUR_AwsAccessKey_HERE>
+# aws configure set aws_secret_access_key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+# aws configure set default.region us-west-2
+# aws configure set output json
+
+# # Export the WordPress configuration file to S3 bucket
+# cd /var/www/html
+# aws s3 sync s3://jonnie-s3/ .
