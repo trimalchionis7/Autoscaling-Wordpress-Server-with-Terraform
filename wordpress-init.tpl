@@ -5,7 +5,7 @@
 # Purpose:
 # This script automates the setup of a WordPress environment on a Linux server.
 # It is designed to be run on a fresh instance to install and configure the necessary
-# components for a WordPress site, including the Apache web server, MariaDB database,
+# components for a WordPress site, including the Apache web server,
 # PHP, and WordPress itself.
 #
 # Usage:
@@ -15,12 +15,10 @@
 #
 # Components Installed:
 # - Apache web server for serving WordPress pages
-# - MariaDB, a community-developed fork of MySQL, for database storage
 # - PHP and PHP MySQL extension to execute WordPress PHP scripts and interact with the database
 # - WordPress, the latest version, as the content management system
 #
 # Additional Configurations:
-# - Sets the MariaDB root password for security
 # - Configures the WordPress wp-config.php with the provided database details
 # - Adjusts file and directory permissions for security and accessibility
 #
@@ -38,8 +36,8 @@
 sudo yum update -y
 # Install Apache web server
 sudo yum install -y httpd
-# Install MariaDB (version 10.5), PHP, and PHP's MySQL extension, along with unzip utility
-sudo yum install -y mariadb105-server php php-mysqlnd unzip
+# Install PHP and PHP's MySQL extension, along with unzip utility
+sudo yum install -y php php-mysqlnd unzip
 
 # Set variables for the database configuration
 DBName=${rds_name}
@@ -53,8 +51,8 @@ sudo systemctl start httpd
 sudo systemctl enable httpd
 
 # Start the MariaDB service and enable it to start automatically on system boot
-sudo systemctl start mariadb
-sudo systemctl enable mariadb
+# sudo systemctl start mariadb
+# sudo systemctl enable mariadb
 
 # Secure the MariaDB server by setting the root password
 mysqladmin -u root password $DBRootPassword
@@ -92,14 +90,7 @@ find /var/www -type f -exec chmod 0664 {} \; # Find files and set permissions
 # Restart Apache to apply changes
 sudo systemctl restart httpd
 
-# # Install AWS Configure
-# sudo yum install -y aws-cli
-# # Configure AWS CLI
-# aws configure set aws_access_key_id <YOUR_AwsAccessKey_HERE>
-# aws configure set aws_secret_access_key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-# aws configure set default.region us-west-2
-# aws configure set output json
-
-# # Export the WordPress configuration file to S3 bucket
-# cd /var/www/html
-# aws s3 sync s3://jonnie-s3/ .
+# Synchronise Wordpress files with S3 bucket
+sudo yum install -y aws-cli
+cd var/www/html/
+aws s3 sync s3://{$var.aws_s3_bucket}

@@ -61,6 +61,7 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
+/*
 # Create NAT gateway in public subnet 1
 resource "aws_nat_gateway" "nat-gw" {
   count         = 1
@@ -81,6 +82,8 @@ resource "aws_eip" "nat-eip" {
   }
 }
 
+*/
+
 # Create public & private route tables
 resource "aws_route_table" "RB_Public_RouteTable" {
   vpc_id = aws_vpc.dev_vpc.id
@@ -98,10 +101,11 @@ resource "aws_route_table" "RB_Public_RouteTable" {
 resource "aws_route_table" "RB_Private_RouteTable" {
   vpc_id = aws_vpc.dev_vpc.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.nat-gw[0].id
+  /*route {
+    # cidr_block = "0.0.0.0/0"
+    # gateway_id = aws_nat_gateway.nat-gw[0].id
   }
+  */
 
   tags = {
     Name = "private-rt"

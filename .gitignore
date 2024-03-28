@@ -13,3 +13,5 @@ app1.log
 jonnie-rds.session.sql
 notes-to-self.md
 .terraform/providers/registry.terraform.io/hashicorp/template/2.2.0/darwin_amd64/terraform-provider-template_v2.2.0_x4
+terraform.tfstate.1711479592.backup
+.terraform.tfstate.lock.info

@@ -27,7 +27,7 @@ resource "aws_instance" "instance-1" {
   vpc_security_group_ids      = [aws_security_group.ec2-sg.id]
   subnet_id                   = aws_subnet.public-1.id
   # iam_instance_profile      = "LabRole"
-  # user_data = file("mariadb-setup.sh")
+  # user_data                 = file("mariadb-setup.sh")
   user_data = base64encode(data.template_file.user-data.rendered)
   tags = {
     Name = "instance-1"
