@@ -47,7 +47,7 @@ The configuration includes the following components:
 
 - **RDS database**: The Amazon RDS (Relational Database Service) is used as a managed relational database and backend to the Wordpress application. It stores all the website's data, including posts, pages, comments, user information and settings. The RDS is placed in the private subnet (where there is no internet connectivity) for greater security and protection from external threats. Also, since this is a multi-AZ deployment, Amazon RDS automatically creates a primary database instance and synchronously replicates the data to an instance in a different AZ, so that, in case of failure, failover to the standby instance can occur without manual intervention.
 
-- **S3 bucket**: I have included a configuration file for an S3 bucket as a web storage solution. For instance, the user may wish to copy or synchronise the Wordpress installation files from the EC2 instance to the S3 bucket. For this, it is necessary to either configure AWS manually on the instance or preconfigure AWS in the instance by assigning to it an IAM role.
+- **S3 bucket**: I have included a configuration file for a S3 bucket as a web storage solution. For instance, the user may wish to copy or synchronise the Wordpress installation files from the EC2 instance to the S3 bucket. For this, it is necessary to either configure AWS manually on the instance or preconfigure AWS in the instance by assigning to it an IAM role.
 
 # Steps to Deployment
 
