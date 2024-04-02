@@ -92,5 +92,7 @@ sudo systemctl restart httpd
 
 # Synchronise Wordpress files with S3 bucket
 sudo yum install -y aws-cli
-cd var/www/html/
-aws s3 sync s3://{$var.aws_s3_bucket}
+
+# Sync all Wordpress files to S3 bucket
+# cd var/www/html/
+# aws s3 sync s3://{$var.aws_s3_bucket}
