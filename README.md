@@ -16,7 +16,7 @@ Before getting started, ensure you have the following installed and configured:
 
 ## Background and Motivation
 
-**Amazon Web Services (AWS)** is a popular cloud computing platform with a huge range of services in areas such as computing, storage. networking, databases, analytics, machine learning and more. AWS enables businesses to build and deploy applications quickly and securely at scale while reducing infrastructure costs.
+**Amazon Web Services (AWS)** is a popular cloud computing platform with a huge range of services in areas such as computing, storage, networking, databases, analytics, machine learning and more. AWS enables businesses to build and deploy applications quickly and securely at scale while reducing infrastructure costs.
 
 A **Virtual Private Cloud (VPC)** is a logically isolated section of the AWS cloud where you can launch AWS resources in a customised virtual network. In a VPC you define your own IP address range, configure route tables, subnets, and network gateways, and you manage your own security settings using security groups and network access control lists (ACLs). VPCs provide a secure and scalable environment for deploying AWS resources while ensuring isolation from other networks.
 
