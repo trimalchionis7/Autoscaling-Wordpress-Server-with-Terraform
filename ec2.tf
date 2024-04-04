@@ -6,14 +6,14 @@ locals {
   owner = "jonnie"
 }
 
-# Select the newest AMI
+# Select the newest Amazon Linux 2 AMI
 data "aws_ami" "latest_linux_ami" {
   most_recent = true
   owners      = ["amazon"]
 
   filter {
     name   = "name"
-    values = ["al2023-ami-2023*x86_64"]
+    values = ["amzn2-ami-hvm-*"]
   }
 }
 resource "aws_instance" "instance-1" {
@@ -22,7 +22,7 @@ resource "aws_instance" "instance-1" {
   instance_type               = "t3.micro"
   availability_zone           = var.az[0]
   associate_public_ip_address = true
-  key_name                    = "jonnie-vpc"
+  key_name                    = var.key_name
   count                       = 1
   vpc_security_group_ids      = [aws_security_group.ec2-sg.id]
   subnet_id                   = aws_subnet.public-1.id
@@ -40,7 +40,7 @@ resource "aws_instance" "instance-2" {
   instance_type               = "t3.micro"
   availability_zone           = var.az[1]
   associate_public_ip_address = true
-  key_name                    = "jonnie-vpc"
+  key_name                    = var.key_name
   count                       = 1
   vpc_security_group_ids      = [aws_security_group.ec2-sg.id]
   subnet_id                   = aws_subnet.public-2.id

@@ -23,7 +23,7 @@ resource "aws_db_instance" "jonnie-rds" {
   multi_az            = true
   publicly_accessible = true
 
-  vpc_security_group_ids = [aws_security_group.allow_ec2_mysql.id]
+  vpc_security_group_ids = [aws_security_group.allow_ec2_rds.id]
   db_subnet_group_name   = aws_db_subnet_group.jonnie_db_subnet_group.name
 
   skip_final_snapshot = true

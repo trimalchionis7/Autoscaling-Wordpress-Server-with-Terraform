@@ -5,7 +5,7 @@ resource "aws_launch_template" "public_launch_template" {
   name                   = "public_launch_template"
   image_id               = data.aws_ami.latest_linux_ami.id
   instance_type          = "t2.micro"
-  key_name               = "jonnie-vpc"
+  key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.ec2-sg.id]
   # user_data             = file("mariadb-setup.sh")
   user_data = base64encode(data.template_file.user-data.rendered)

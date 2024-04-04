@@ -1,5 +1,4 @@
 # Variables
-
 variable "region" {
   default     = "us-west-2"
   description = "AWS Region"
@@ -30,6 +29,10 @@ variable "private_subnet_cidr_blocks" {
   description = "CIDR blocks for private subnets"
   default     = ["10.0.2.0/24", "10.0.4.0/24"]
 }
+variable "key_name" {
+  description = "Key pair resource for EC2"
+  default     = "jonnie-vpc" 
+}
 
 variable "rds_name" {
   description = "RDS DB name"
@@ -55,17 +58,3 @@ variable "aws_s3_bucket" {
   description = "S3 bucket name"
   default     = "jonnie-s3"
 }
-
-/*variable "latest_amazon_linux_ami" {
-  description = "Latest Amazon Linux AMI for the specified region"
-  type        = string
-  default     = "ami-0895022f3dac85884"
-}
-
-variable "AMIs" {
-    type = map(string)
-    description = "Region specific AMI"
-    default = {
-    us-west-2 = "ami-0895022f3dac85884"
-    }
-}*/

@@ -73,3 +73,27 @@ resource "aws_security_group" "ec2-sg" {
     Name = "ec2-sg"
   }
 }
+
+# Create security group for RDS database
+resource "aws_security_group" "allow_ec2_rds" {
+  name        = "allow_ec2_rds"
+  description = "Allow RDS inbound traffic from ec2"
+  vpc_id      = aws_vpc.dev_vpc.id
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "rds-sg"
+  }
+}
