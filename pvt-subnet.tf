@@ -21,6 +21,12 @@ resource "aws_subnet" "private-2" {
 # Create private route table
 resource "aws_route_table" "RB_Private_RouteTable" {
   vpc_id = aws_vpc.dev_vpc.id
+
+  route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_nat_gateway.nat-gw[0].id
+  }
+  
   tags = {
     Name = "private-rt"
   }

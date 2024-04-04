@@ -1,5 +1,3 @@
-/*
-
 # Create NAT gateway in public subnet 1
 resource "aws_nat_gateway" "nat-gw" {
   count         = 1
@@ -28,5 +26,3 @@ resource "aws_route_table" "RB_Private_RouteTable" {
         gateway_id = aws_nat_gateway.nat-gw[0].id
   }
 }
-
-*/
