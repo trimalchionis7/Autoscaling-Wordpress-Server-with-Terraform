@@ -49,6 +49,16 @@ The configuration includes the following components:
 
 - **S3 bucket**: I have included a configuration file for a S3 bucket as a web storage solution. For instance, the user may wish to copy or synchronise the Wordpress installation files from the EC2 instance to the S3 bucket. For this, it is necessary to either configure AWS manually on the instance or preconfigure AWS in the instance by assigning to it an IAM role.
 
+# Setting up your Environment
+
+Before proceeding with the deployment, you need to take 2 steps to set up your personal environment.
+
+1. Create a key pair for your EC2 instances and set the key pair name as the default value in the variable block "key_name" within the variables.tf file.
+
+A key pair is a set of cryptographic keys which allows secure access to EC2 instances. It is called a pair because it consists of both a public key, which is stored on the EC2 instance, and a private key, which is stored on your own machine. You can create a key pair using either the AWS Management Console or the CLI, following the instructions provided [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
+
+2. Provide a unique name for the S3 bucket by setting a default value in the variable block "aws_s3_bucket" within the variables.tf file.
+
 # Steps to Deployment
 
 After cloning this repository into a suitable working directory on your machine, you can deploy this infrastructure using the following CLI commands:

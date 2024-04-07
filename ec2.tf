@@ -13,7 +13,7 @@ data "aws_ami" "latest_linux_ami" {
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-*"]
+    values = ["al2023-ami-2023*x86_64"]
   }
 }
 resource "aws_instance" "instance-1" {

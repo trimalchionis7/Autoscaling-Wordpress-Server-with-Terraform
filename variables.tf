@@ -1,13 +1,13 @@
 # Variables
 variable "region" {
-  default     = "us-west-2"
+  default     = "eu-central-1"
   description = "AWS Region"
 }
 
 variable "az" {
   description = "Availability zone to create subnet"
   type        = list(string)
-  default     = ["us-west-2a", "us-west-2b"]
+  default     = ["eu-central-1a", "eu-central-1b"]
 }
 
 variable "subnet_ids" {
@@ -31,7 +31,7 @@ variable "private_subnet_cidr_blocks" {
 }
 variable "key_name" {
   description = "Key pair resource for EC2"
-  default     = "jonnie-vpc" 
+  default     = "jonnie-eu-central-1"
 }
 
 variable "rds_name" {

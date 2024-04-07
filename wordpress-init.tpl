@@ -90,7 +90,10 @@ find /var/www -type f -exec chmod 0664 {} \; # Find files and set permissions
 # Restart Apache to apply changes
 sudo systemctl restart httpd
 
-# Synchronise Wordpress files with S3 bucket
+# Update all packages on the system to their latest versions
+sudo yum update -y
+
+# Install AWS CLI
 sudo yum install -y aws-cli
 
 # Sync all Wordpress files to S3 bucket
