@@ -1,3 +1,40 @@
+# Create security group for bastion host
+resource "aws_security_group" "bastion-sg" {
+  name        = "bastion-sg"
+  description = "Allows SSH access from anywhere"
+  vpc_id      = aws_vpc.dev_vpc.id
+
+  # Add inbound rules
+  # Allow SSH
+  ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Add an inbound rule
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Add an outbound rule
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "bastion-sg"
+  }
+}
+
 # Create security group which traffics internet to the ALB
 resource "aws_security_group" "alb-sg" {
   name        = "load_balancer_security_group"
@@ -10,15 +47,6 @@ resource "aws_security_group" "alb-sg" {
     description = "HTTP"
     from_port   = 80
     to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Allow SSH
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -36,41 +64,40 @@ resource "aws_security_group" "alb-sg" {
   }
 }
 
-# Create security group which traffics internet from ALB to EC2 instances
-resource "aws_security_group" "ec2-sg" {
-  name        = "ec2_security_group"
-  description = "Allows internet access from ALB to EC2 instances"
+# Create security group which traffics HTTP from ALB & SSH from bastion host
+resource "aws_security_group" "asg_security_group" {
+  name        = "asg-security-group"
+  description = "Allows internet connectivity for EC2 instances"
   vpc_id      = aws_vpc.dev_vpc.id
 
   # Add inbound rules
-  # Allow HTTP  
   ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb-sg.id]
   }
 
-  # Allow SSH
+  # Allow SSH access only from bastion host
+
   ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description     = "SSH"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion-sg.id]
   }
 
   # Add an outbound rule
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port         = 0
+    to_port           = 0
+    protocol          = "-1"
+    cidr_blocks       = ["0.0.0.0/0"]
   }
 
   tags = {
-    Name = "ec2-sg"
+    Name = "asg-sg"
   }
 }
 

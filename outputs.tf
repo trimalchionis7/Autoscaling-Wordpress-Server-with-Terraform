@@ -1,9 +1,9 @@
 # Outputs
 
 # Output RDS Endpoint
-output "rds_endpoint" {
-  value = data.aws_db_instance.jonnie-rds.endpoint
-}
+# output "rds_endpoint" {
+  # value = data.aws_db_instance.jonnie-rds.endpoint
+# }
 
 # Output RDS Name
 output "rds_name" {
