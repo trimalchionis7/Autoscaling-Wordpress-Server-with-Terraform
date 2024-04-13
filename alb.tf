@@ -6,7 +6,7 @@ resource "aws_lb" "alb" {
   internal           = false
   load_balancer_type = "application"
   subnets            = [aws_subnet.public-1.id, aws_subnet.public-2.id]
-  security_groups    = [aws_security_group.ec2-sg.id]
+  security_groups    = [aws_security_group.asg_security_group.id]
   ip_address_type    = "ipv4"
 
   tags = {

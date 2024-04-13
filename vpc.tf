@@ -5,6 +5,7 @@ resource "aws_vpc" "dev_vpc" {
   enable_dns_support   = true
 
   tags = {
-    name = "jonnie-vpc"
+    terraform = "true"
+    Name      = "jonnie-vpc"
   }
 }

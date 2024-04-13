@@ -17,36 +17,28 @@ data "aws_ami" "latest_linux_ami" {
   }
 }
 resource "aws_instance" "instance-1" {
-  ami = data.aws_ami.latest_linux_ami.id
-  # ami                       = var.AMIs[var.region]
-  instance_type               = "t3.micro"
-  availability_zone           = var.az[0]
-  associate_public_ip_address = true
-  key_name                    = var.key_name
-  count                       = 1
-  vpc_security_group_ids      = [aws_security_group.ec2-sg.id]
-  subnet_id                   = aws_subnet.public-1.id
-  # iam_instance_profile      = "LabRole"
-  # user_data                 = file("mariadb-setup.sh")
-  user_data = base64encode(data.template_file.user-data.rendered)
+  ami                    = data.aws_ami.latest_linux_ami.id
+  instance_type          = "t3.micro"
+  availability_zone      = var.az[0]
+  key_name               = var.key_name
+  count                  = 1
+  vpc_security_group_ids = [aws_security_group.asg_security_group.id]
+  subnet_id              = aws_subnet.private-1.id
+  user_data              = base64encode(data.template_file.user-data.rendered)
   tags = {
     Name = "instance-1"
   }
 }
 
 resource "aws_instance" "instance-2" {
-  ami = data.aws_ami.latest_linux_ami.id
-  # ami                       = var.AMIs[var.region]
-  instance_type               = "t3.micro"
-  availability_zone           = var.az[1]
-  associate_public_ip_address = true
-  key_name                    = var.key_name
-  count                       = 1
-  vpc_security_group_ids      = [aws_security_group.ec2-sg.id]
-  subnet_id                   = aws_subnet.public-2.id
-  # iam_instance_profile      = "LabRole"
-  # user_data                 = file("mariadb-setup.sh")
-  user_data = base64encode(data.template_file.user-data.rendered)
+  ami                    = data.aws_ami.latest_linux_ami.id
+  instance_type          = "t3.micro"
+  availability_zone      = var.az[1]
+  key_name               = var.key_name
+  count                  = 1
+  vpc_security_group_ids = [aws_security_group.asg_security_group.id]
+  subnet_id              = aws_subnet.private-2.id
+  user_data              = base64encode(data.template_file.user-data.rendered)
   tags = {
     Name = "instance-2"
   }
