@@ -72,6 +72,7 @@ resource "aws_security_group" "asg_security_group" {
 
   # Add inbound rules
   ingress {
+    description     = "HTTP"
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"

@@ -6,7 +6,7 @@ resource "aws_lb" "alb" {
   internal           = false
   load_balancer_type = "application"
   subnets            = [aws_subnet.public-1.id, aws_subnet.public-2.id]
-  security_groups    = [aws_security_group.asg_security_group.id]
+  security_groups    = [aws_security_group.alb-sg.id]
   ip_address_type    = "ipv4"
 
   tags = {
@@ -38,11 +38,10 @@ resource "aws_lb_target_group" "target-group" {
   }
 }
 
-# Attach target group to instances
-resource "aws_alb_target_group_attachment" "ec2_attach" {
-  target_group_arn = aws_lb_target_group.target-group.arn
-  target_id        = aws_instance.instance-1.id
-  port             = 80
+# Attach target group to autoscaling group
+resource "aws_autoscaling_attachment" "asg_attachment" {
+  alb_target_group_arn    = aws_lb_target_group.target-group.arn
+  autoscaling_group_name  = aws_autoscaling_group.private_asg.name
 }
 
 # Check for HTTP connection requests using listener
