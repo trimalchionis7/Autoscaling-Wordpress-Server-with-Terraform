@@ -3,9 +3,9 @@
 # Create an ALB
 resource "aws_lb" "alb" {
   name               = "jonnie-alb"
-  internal           = true
+  internal           = false
   load_balancer_type = "application"
-  subnets            = [aws_subnet.private-1.id, aws_subnet.private-2.id]
+  subnets            = [aws_subnet.public-1.id, aws_subnet.public-2.id]
   security_groups    = [aws_security_group.asg_security_group.id]
   ip_address_type    = "ipv4"
 
