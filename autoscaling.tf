@@ -11,11 +11,11 @@ resource "aws_launch_template" "public_launch_template" {
 }
 
 # Create autoscaling group
-resource "aws_autoscaling_group" "public_asg" {
-  name                      = "public_asg"
+resource "aws_autoscaling_group" "private_asg" {
+  name                      = "private_asg"
   min_size                  = 1
-  max_size                  = 2
-  desired_capacity          = 1
+  max_size                  = 4
+  desired_capacity          = 2
   vpc_zone_identifier       = [aws_subnet.private-1.id, aws_subnet.private-2.id]
   target_group_arns         = [aws_lb_target_group.target-group.arn]
   health_check_type         = "ELB"
@@ -34,9 +34,9 @@ resource "aws_autoscaling_group" "public_asg" {
 }
 
 # Create autoscaling policy
-resource "aws_autoscaling_policy" "public_asg_policy" {
-  name                   = "public_asg_policy"
-  autoscaling_group_name = aws_autoscaling_group.public_asg.name
+resource "aws_autoscaling_policy" "private_asg_policy" {
+  name                   = "private_asg_policy"
+  autoscaling_group_name = aws_autoscaling_group.private_asg.name
   policy_type            = "TargetTrackingScaling"
   target_tracking_configuration {
     predefined_metric_specification {

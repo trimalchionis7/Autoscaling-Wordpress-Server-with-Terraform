@@ -3,9 +3,9 @@
 # Create an ALB
 resource "aws_lb" "alb" {
   name               = "jonnie-alb"
-  internal           = false
+  internal           = true
   load_balancer_type = "application"
-  subnets            = [aws_subnet.public-1.id, aws_subnet.public-2.id]
+  subnets            = [aws_subnet.private-1.id, aws_subnet.private-2.id]
   security_groups    = [aws_security_group.asg_security_group.id]
   ip_address_type    = "ipv4"
 
@@ -40,9 +40,9 @@ resource "aws_lb_target_group" "target-group" {
 
 # Attach target group to instances
 resource "aws_alb_target_group_attachment" "ec2_attach" {
-  count            = length(aws_instance.instance-1) + length(aws_instance.instance-2)
   target_group_arn = aws_lb_target_group.target-group.arn
-  target_id        = count.index < length(aws_instance.instance-1) ? aws_instance.instance-1[count.index].id : aws_instance.instance-2[count.index - length(aws_instance.instance-1)].id
+  target_id        = aws_instance.instance-1.id
+  port             = 80
 }
 
 # Check for HTTP connection requests using listener

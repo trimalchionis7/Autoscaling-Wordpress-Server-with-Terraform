@@ -31,7 +31,7 @@ variable "private_subnet_cidr_blocks" {
 }
 variable "key_name" {
   description = "Key pair resource for EC2"
-  default     = "jonnie-eu-central-1"
+  default     = "jonnie-vpc"
 }
 
 variable "rds_name" {

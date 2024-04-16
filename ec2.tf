@@ -1,4 +1,4 @@
-# Create specified number of EC2 instances
+# Create EC2 instance
 
 locals {
   # The name of the EC2 instance
@@ -21,26 +21,11 @@ resource "aws_instance" "instance-1" {
   instance_type          = "t3.micro"
   availability_zone      = var.az[0]
   key_name               = var.key_name
-  count                  = 1
   vpc_security_group_ids = [aws_security_group.asg_security_group.id]
   subnet_id              = aws_subnet.private-1.id
   user_data              = base64encode(data.template_file.user-data.rendered)
   tags = {
     Name = "instance-1"
-  }
-}
-
-resource "aws_instance" "instance-2" {
-  ami                    = data.aws_ami.latest_linux_ami.id
-  instance_type          = "t3.micro"
-  availability_zone      = var.az[1]
-  key_name               = var.key_name
-  count                  = 1
-  vpc_security_group_ids = [aws_security_group.asg_security_group.id]
-  subnet_id              = aws_subnet.private-2.id
-  user_data              = base64encode(data.template_file.user-data.rendered)
-  tags = {
-    Name = "instance-2"
   }
 }
 
