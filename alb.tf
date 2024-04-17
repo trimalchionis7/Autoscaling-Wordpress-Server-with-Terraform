@@ -40,8 +40,8 @@ resource "aws_lb_target_group" "target-group" {
 
 # Attach target group to autoscaling group
 resource "aws_autoscaling_attachment" "asg_attachment" {
-  alb_target_group_arn    = aws_lb_target_group.target-group.arn
-  autoscaling_group_name  = aws_autoscaling_group.private_asg.name
+  alb_target_group_arn   = aws_lb_target_group.target-group.arn
+  autoscaling_group_name = aws_autoscaling_group.private_asg.name
 }
 
 # Check for HTTP connection requests using listener

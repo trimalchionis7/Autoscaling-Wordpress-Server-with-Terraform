@@ -29,7 +29,7 @@ Here is a diagram of my VPC configuration (generated with draw.io):
 ![VPC Configuration Diagram](/pictures/vpc-diagram.png)
 
 The configuration includes the following components:
-- **VPC**: a logically isolated virtual network in the AWS Region eu-central-1 with CIDR block 10.0.0.0/16.
+- **VPC**: a logically isolated virtual network in the AWS Region eu-central-1 with CIDR block 10.0.0.0/22 (or 1024 usable IP addresses).
 
 - **Availability Zones**: 2 Availability Zones set to eu-central-1a and eu-central-1b. Using multiple AZs ensures redundancy and fault tolerance, so that, if one AZ experiences an outage or failure, resources in the other AZs remain unaffected.
 

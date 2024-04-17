@@ -18,7 +18,7 @@ variable "subnet_ids" {
 
 variable "vpc_cidr_block" {
   description = "CIDR block for the VPC"
-  default     = "10.0.0.0/16"
+  default     = "10.0.0.0/20"
 }
 variable "public_subnet_cidr_blocks" {
   description = "CIDR blocks for public subnets"
